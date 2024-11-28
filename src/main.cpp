@@ -88,7 +88,7 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
 }
 
 int main() {
-    vector<string> stationNames{"A","B","C","D","E","F","G","H"}; //{"Totonian", "Markarth", "Sevental", "Green Acres", "Lawnton", "Great Rock", "Tea Town"};
+    vector<string> stationNames{"Totonian", "Markarth", "Sevental", "Green Acres", "Lawnton", "Great Rock", "Tea Town"}; //{"A","B","C","D","E","F","G","H"};
     random_device rd;
     mt19937 gen(rd());
 
