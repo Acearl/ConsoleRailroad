@@ -47,10 +47,10 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
     //update ogStationList
     for(int x = 0; x< ogStationList.size(); x++)
     {
-        cout<<"X "<<x<<endl;
+        //cout<<"X "<<x<<endl;
         vector<Station> tempStationList = ogStationList;
         vector<string> tempStationNames = stationNames;
-        cout<<"Setting destinations for "<<tempStationList.at(x).getName()<<endl;
+        //cout<<"Setting destinations for "<<tempStationList.at(x).getName()<<endl;
 
         tempStationList.erase(tempStationList.begin() + x);
         //I dont fully understand why this turns the input into a vector of
@@ -80,8 +80,8 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
         }
         // cout<<"Station: "<<ogStationList[x].getName()<<" Goes to"<<endl;
         ogStationList[x].setDestinations(destinations);
-        ogStationList[x].displayDestinations();
-        cout<<endl;
+        //ogStationList[x].displayDestinations();
+        //cout<<endl;
         //ogStationList[];
     }
     return ogStationList;
