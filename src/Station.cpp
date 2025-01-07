@@ -33,9 +33,10 @@ class Station{
         }
         void displayDestinations() const
         {
+            cout<<name<<":"<<endl;
             for(pair<string,double> destination: destinations)
             {
-                cout<<"First "<<destination.first<<" Second "<<destination.second<<endl;
+                cout<<"    "<<destination.first<<", "<<destination.second<<endl;
             }
         }
         int getX()

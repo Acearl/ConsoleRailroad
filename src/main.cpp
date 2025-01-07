@@ -14,6 +14,7 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
     uniform_int_distribution<> coordDistrib(0, gridLen - 1);
     //for every number of stations make a station using the name list with random grid cords
     //remove name from list and reduce max size of random int distribution.
+    bool repeatFlag = false;
     for (size_t i = 0; i < numStations; i++) {
         uniform_int_distribution<> nameDistrib(0, static_cast<int>(stationNames.size()) - 1);
         int randIndex = nameDistrib(gen);
@@ -23,10 +24,30 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
         int x = coordDistrib(gen); // x coordinate within grid bounds
         int y = coordDistrib(gen); // y coordinate within grid bounds
         //Picks any of the stations inside randomly unless the min is the size of the name list
-        Station temp(stationNames[randIndex], make_pair(x, y));
-        ogStationList.push_back(temp);
+        if(ogStationList.size() > 1)
+        {
+            for(auto& station: ogStationList)
+            {
+                if(station.getX() == x && station.getY() == y)
+                {
+                    repeatFlag = true;
+                    cout<<"hit"<<endl;
+                }
+            }
+        }
+        
+        if(repeatFlag == false)
+        {
+            Station temp(stationNames[randIndex], make_pair(x, y));
+            ogStationList.push_back(temp);
 
-        stationNames.erase(stationNames.begin() + randIndex);
+            stationNames.erase(stationNames.begin() + randIndex);
+        }
+        else{
+            i--;
+            repeatFlag=false;
+        }
+        
     }
     //this distrib is for multiple destinations in a station. 
     //This removes duplicate destinations in the list
@@ -99,6 +120,8 @@ int main() {
     for (auto& station : stationList) {
         station.display();
     }
-
+    // for (auto& station : stationList) {
+    //     station.displayDestinations();
+    // }
     return 0;
 }
