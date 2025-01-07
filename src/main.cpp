@@ -88,8 +88,16 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
             Station target = tempStationList[randIndex];
 
             //cout<<"randIndex "<<randIndex<<", ";
-
-            double distance = sqrt(pow(target.getY() - tempStationList[x].getY(), 2.0) + pow(target.getX()+tempStationList[x].getY(),2.0));
+            // cout<<target.getY()<<"-"<<tempStationList[x].getY()<<"="<<target.getY() - tempStationList[x].getY();
+            // cout<<" pow"<<pow(target.getY() - tempStationList[x].getY(), 2.0)<<endl;
+            // cout<<target.getX()<<"-"<<tempStationList[x].getX()<<"="<<target.getX() - tempStationList[x].getX();
+            // cout<<" pow"<<pow(target.getX() - tempStationList[x].getX(), 2.0)<<endl;
+            // cout<<"added"<<(pow(target.getY() - tempStationList[x].getY(), 2.0)) + (pow(target.getX()-tempStationList[x].getY(),2.0))<<endl;
+            // cout<<"sqrt"<<sqrt((pow(target.getY() - tempStationList[x].getY(), 2.0) + (pow(target.getX()-tempStationList[x].getY(),2.0))))<<endl;
+            double distance = sqrt(
+                pow(target.getY() - ogStationList[x].getY(), 2.0) + 
+                pow(target.getX() - ogStationList[x].getX(), 2.0)
+            );
             
             //cout<<tempStationList[x].getY()<<" "<<tempStationList[x].getX()<<" "<<distance<<" "<<randIndex<<endl;
             
@@ -120,8 +128,8 @@ int main() {
     for (auto& station : stationList) {
         station.display();
     }
-    // for (auto& station : stationList) {
-    //     station.displayDestinations();
-    // }
+    for (auto& station : stationList) {
+        station.displayDestinations();
+    }
     return 0;
 }
