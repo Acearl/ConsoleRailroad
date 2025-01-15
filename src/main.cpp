@@ -1,5 +1,6 @@
 #include <iostream>
-#include "Station.cpp"  // Ensure this is implemented correctly
+#include "Station.cpp"  
+#include "Train.cpp" 
 #include <string>
 #include <vector>
 #include <random>
@@ -120,7 +121,8 @@ int main() {
     vector<string> stationNames{"Totonian", "Markarth", "Sevental", "Green Acres", "Lawnton", "Great Rock", "Tea Town"}; //{"A","B","C","D","E","F","G","H"};
     random_device rd;
     mt19937 gen(rd());
-
+    char selection = ' ';
+    //vector<char> selectionList = {'q','r'};
     // Generate stations with random names and coordinates
     vector<Station> stationList = GenerateStations(stationNames, gen);
 
@@ -131,5 +133,31 @@ int main() {
     for (auto& station : stationList) {
         station.displayDestinations();
     }
+    Train player = Train("player",stationList.at(0),1.0);
+    
+    int target = 0;
+    while (selection != 'q' || selection != 'Q')
+    {
+        cout<<"what do you select? Q,R, or number presented"<<endl;
+        int counter = 1;
+        for(pair<string,double> x : stationList.at(target).getDestinations())
+        {
+            cout<<counter<<". "<<x.first<<", "<<x.second<<endl;
+            counter++;
+        }
+        cin >> selection;
+        // towupper(selection);
+        // if (/* condition */)
+        // {
+        //     /* code */
+        // }
+        // else if(isdigit(selection) || (int)selection>0)
+        // {
+        //     target = (int)selection;
+        // }
+        
+        // /* code */
+    }
+    
     return 0;
 }
