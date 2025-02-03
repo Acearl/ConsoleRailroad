@@ -146,6 +146,11 @@ int main() {
             counter++;
         }
         cin >> selection;
+
+	if (isdigit(selection) && (int)selection>0)
+	{
+		train.setDestination((int)selection);
+	}
         // towupper(selection);
         // if (/* condition */)
         // {

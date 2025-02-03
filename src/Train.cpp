@@ -27,12 +27,25 @@ class Train{
     }
     
     void setDest(const Station& x)
-    {
-        dest = x;
+    }
+        dest = *x;
     }
     void setCurrent(const Station& x)
     {
-        current = x;
+        current = *x;
+    }
+    void travel()
+    {
+	float time;
+	float dist = distCalc();
+
+    }
+    float distCalc()
+    {
+	double distance = sqrt( 
+		pow(dest.getY() - current.getY(), 2.0) + 
+		pow(dest.getX() - current.getX(), 2.0)
+        );
     }
 
 };
