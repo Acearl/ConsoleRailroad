@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Station.cpp"
+#include <cmath>
 
 //train has values to know where it goes
 //gets distance, uses speed for time
@@ -10,6 +11,7 @@ class Train{
         Station dest;
         double speed;
         std::string name;
+        
     public:
     Train(){};
     Train(std::string name, Station current, double speed)
@@ -26,11 +28,11 @@ class Train{
         cout<<":"<<speed<<endl;
     }
     
-    void setDest(const Station& x)
-    }
+    void setDest(const Station *x)
+    {
         dest = *x;
     }
-    void setCurrent(const Station& x)
+    void setCurrent(const Station *x)
     {
         current = *x;
     }
@@ -46,6 +48,8 @@ class Train{
 		pow(dest.getY() - current.getY(), 2.0) + 
 		pow(dest.getX() - current.getX(), 2.0)
         );
+
+        return distance;
     }
 
 };

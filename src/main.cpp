@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <random>
+#include <cctype>
+
 using namespace std;
 
 vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
@@ -117,11 +119,12 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
     return ogStationList;
 }
 
-int main() {
+int main() 
+{
     vector<string> stationNames{"Totonian", "Markarth", "Sevental", "Green Acres", "Lawnton", "Great Rock", "Tea Town"}; //{"A","B","C","D","E","F","G","H"};
     random_device rd;
     mt19937 gen(rd());
-    char selection = ' ';
+    
     //vector<char> selectionList = {'q','r'};
     // Generate stations with random names and coordinates
     vector<Station> stationList = GenerateStations(stationNames, gen);
@@ -134,22 +137,29 @@ int main() {
         station.displayDestinations();
     }
     Train player = Train("player",stationList.at(0),1.0);
-    
+    cout<<endl;
     int target = 0;
-    while (selection != 'q' || selection != 'Q')
+    char selection = ' ';
+    vector<pair<string,double>> destinations;
+    while (selection != 'q' && selection != 'Q')
     {
         cout<<"what do you select? Q,R, or number presented"<<endl;
         int counter = 1;
+        
         for(pair<string,double> x : stationList.at(target).getDestinations())
         {
+            destinations.push_back(x);
             cout<<counter<<". "<<x.first<<", "<<x.second<<endl;
             counter++;
         }
-        cin >> selection;
 
-	if (isdigit(selection) && (int)selection>0)
+        //cout<<destinations.at(0).first;
+        cin >> selection;
+        
+    }
+	if (isdigit(selection) && isdigit(selection) && (int)selection > 0 && (int)selection <= destinations.size())
 	{
-		train.setDestination((int)selection);
+		
 	}
         // towupper(selection);
         // if (/* condition */)
@@ -162,7 +172,8 @@ int main() {
         // }
         
         // /* code */
-    }
+    
     
     return 0;
+    
 }
