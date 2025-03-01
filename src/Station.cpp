@@ -14,7 +14,7 @@ class Station{
         string name;
         pair<int,int> cords;
         //name1, 4.4 etc
-        vector<pair<string, double>> destinations;
+	vector<Station> destinations;
         vector<string> destinations2;
 
     public:
@@ -22,8 +22,8 @@ class Station{
         Station(const string& name, const pair<int,int>& cords)
         : name(name), cords(cords), destinations() {};
         Station(const string& name, const pair<int,int>& cords, const vector<string> dest)
-        : name(name), cords(cords), destinations2(dest){};
-        Station(const string& name, const pair<int,int>& cords, const vector<pair<string,double>> dest)
+        : name(name), cords(cords), destinations2(dest){}
+        Station(const string& name, const pair<int,int>& cords, const vector<Station> dest)
         : name(name), cords(cords), destinations(dest){};
         void display() const
         {
@@ -32,9 +32,11 @@ class Station{
         void displayDestinations() const
         {
             cout<<name<<":"<<endl;
-            for(pair<string,double> destination: destinations)
+	    int counter = 1;
+            for(Station destination: destinations)
             {
-                cout<<"\t"<<destination.first<<", "<<destination.second<<endl;
+                cout<<"\t"<<counter<<". "<<destination.getName()<<", "<<"dist calc()"<<endl;
+		counter++;
             }
         }
         int getX()
@@ -53,11 +55,11 @@ class Station{
         {
             this->destinations2=destinations;
         }
-        vector<pair<string, double>> getDestinations()
+        vector<Station> getDestinations()
         {
             return destinations;
         }
-        void setDestinations(vector<pair<string,double>>& destinations)
+        void setDestinations(vector<Station>& destinations)
         {
             this->destinations=destinations;
         }

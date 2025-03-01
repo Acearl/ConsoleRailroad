@@ -28,13 +28,21 @@ class Train{
         cout<<":"<<speed<<endl;
     }
     
-    void setDest(const Station *x)
+    void setDest(Station *x)
     {
         dest = *x;
     }
-    void setCurrent(const Station *x)
+    void setCurrent(Station *x)
     {
         current = *x;
+    }
+    Station getDest()
+    {
+	return dest;
+    }
+    Station getCurrent()
+    {
+	return current;
     }
     void travel()
     {
