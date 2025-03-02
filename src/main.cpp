@@ -148,39 +148,21 @@ int main()
         cout<<"Selection: ";
 	cin >> selection;
 	//step 4
-	cout<<"should be digit "<<isdigit(selection)<<endl;
-	cout<<"sel <= 1: It is "<<((int)selection >=1)<<endl;
-	cout<<"size "<< curStation.getDestinations().size()<<endl;
-	cout<<"sel to int "<<selection-'0' <<endl;
-	selection = selection - '0';
-	if (isdigit(selection) && (int)selection >= 1 && (int)selection <= curStation.getDestinations().size())
-	{
-		target = (int)selection;
-		vector<Station> dests = curStation.getDestinations();
-		//account for vectors start at 0
-		Station targetStation = dests.at(target);
-		player.setDest(&targetStation);
-		Station temp = player.getDest();
-		temp.display();
-		cout<<"hit"<<endl;
-		//cout<<"test "<<target.getDestinations().at(0).display();
-		//player.setDest(destinations.at((int)selection));
-		//player.getDest().display();
-	}
-    }
 	
-        // towupper(selection);
-        // if (/* condition */)
-        // {
-        //     /* code */
-        // }
-        // else if(isdigit(selection) || (int)selection>0)
-        // {
-        //     target = (int)selection;
-        // }
-        
-        // /* code */
-    
+	if(isdigit(selection))
+	{
+		target = (selection - '0')-1;
+		//cout<<"target : "<<target<<endl;
+		if (target >= 0 && target < curStation.getDestinations().size())
+		{
+			vector<Station> dests = curStation.getDestinations();
+			Station targetStation = dests.at(target);
+			player.setDest(&targetStation);
+			Station temp = player.getDest();
+			temp.display();
+		}
+	}
+    }    
     
     return 0;
     
