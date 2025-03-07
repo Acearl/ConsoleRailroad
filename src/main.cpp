@@ -15,7 +15,7 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
     int gridLen = static_cast<int>(stationNames.size());
     vector<Station> ogStationList;
     uniform_int_distribution<> ogNameDistrib(0, stationNames.size()-1);
-    uniform_int_distribution<> coordDistrib(0, gridLen - 1);
+    uniform_int_distribution<> cordDistrib(0, gridLen - 1);
 
     //for every number of stations make a station using the name list with random grid cords
     //remove name from list and reduce max size of random int distribution.
@@ -26,10 +26,10 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
 
         //cout << "randIndex: " << randIndex << " -> " << stationNames[randIndex] << endl;
 
-        int x = coordDistrib(gen); // x coordinate within grid bounds
-        int y = coordDistrib(gen); // y coordinate within grid bounds
+        int x = cordDistrib(gen); // x coordinate within grid bounds
+        int y = cordDistrib(gen); // y coordinate within grid bounds
         //Picks any of the stations inside randomly unless the min is the size of the name list
-        if(ogStationList.size() > 1)
+        if(ogStationList.size() > 1)//rolls again for duplicate stations at thje same place
         {
             for(auto& station: ogStationList)
             {
@@ -45,7 +45,6 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
         {
             Station temp(stationNames[randIndex], make_pair(x, y));
             ogStationList.push_back(temp);
-
             stationNames.erase(stationNames.begin() + randIndex);
         }
         else{
@@ -53,51 +52,41 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
             repeatFlag=false;
         }
         
-    }
-	//find for each station in the station list declared with only a string
+    }	//find for each station in the station list declared with only a string
 	//setting their destinations of stations they connect to.
 	//
-    for(int x = 0; x< ogStationList.size(); x++)
+	//vector<Station*> baseStations = {};
+	//vector<Station*> tempDestinations;
+    for(int x = 0; x < ogStationList.size(); x++)
     {
         //cout<<"X "<<x<<endl;
-        vector<Station> tempStationList = ogStationList;
-        vector<string> tempStationNames = stationNames;
-        //cout<<"Setting destinations for "<<tempStationList.at(x).getName()<<endl;
-
-        tempStationList.erase(tempStationList.begin() + x);
-        //I dont fully understand why this turns the input into a vector of
-        //stations instead of just the number at the station to be removed
-        //must be placed in number of stations x to prevent multiple removals of x place    
-        vector<Station> destinations{};
-
-        for (size_t i = 0; i < 2; i++)
+	vector<Station*> destinations;//reset destinations for next station
+	vector<Station*> tempStationList;//for removing stations
+	for(int k = 0; k<ogStationList.size(); k++)
+	{
+		if(k!=x)
+		{
+			tempStationList.push_back(&ogStationList[k]);
+		}
+	}
+	cout<<"test"<<endl;
+	//vector<string> tempStationNames = stationNames;//for removing names
+        cout<<"Setting destinations for "<<ogStationList[x].getName()<<endl;
+        //tempStationList.erase(tempStationList.begin() + x);//remove station's own name
+	for (size_t i = 0; i < 2; i++)
         {
 
             uniform_int_distribution<> stationDistrib(0, static_cast<int>(tempStationList.size()) - 1);
             //I dont fully understand why this turns the input into a vector of
             //stations instead of just the number at the station to be removed
             int randIndex = stationDistrib(gen);
-            Station target = tempStationList[randIndex];
-
-            //cout<<"randIndex "<<randIndex<<", ";
-            // cout<<target.getY()<<"-"<<tempStationList[x].getY()<<"="<<target.getY() - tempStationList[x].getY();
-            // cout<<" pow"<<pow(target.getY() - tempStationList[x].getY(), 2.0)<<endl;
-            // cout<<target.getX()<<"-"<<tempStationList[x].getX()<<"="<<target.getX() - tempStationList[x].getX();
-            // cout<<" pow"<<pow(target.getX() - tempStationList[x].getX(), 2.0)<<endl;
-            // cout<<"added"<<(pow(target.getY() - tempStationList[x].getY(), 2.0)) + (pow(target.getX()-tempStationList[x].getY(),2.0))<<endl;
-            // cout<<"sqrt"<<sqrt((pow(target.getY() - tempStationList[x].getY(), 2.0) + (pow(target.getX()-tempStationList[x].getY(),2.0))))<<endl;
-            double distance = sqrt(
-                pow(target.getY() - ogStationList[x].getY(), 2.0) + 
-                pow(target.getX() - ogStationList[x].getX(), 2.0)
-            );
-
+            Station* target = tempStationList[randIndex];//dest target
             destinations.push_back(target);
-
-
             tempStationList.erase(tempStationList.begin()+randIndex);
         }
+
         ogStationList[x].setDestinations(destinations);
-        
+	        
     }
     return ogStationList;
 }
@@ -108,23 +97,29 @@ int main()
     random_device rd;
     mt19937 gen(rd());
     
-    //vector<char> selectionList = {'q','r'};
     // Generate stations with random names and coordinates
     vector<Station> stationList = GenerateStations(stationNames, gen);
 
     // Display the generated stations
-    for (auto& station : stationList) {
+    for (auto& station : stationList) 
+    {
         station.display();
     }
-    for (auto& station : stationList) {
-        station.displayDestinations();
+    //cout<<"rip"<<endl;
+    for (int i = 0; i<stationList.size(); i++) 
+    {
+	 stationList[i].displayDestinations();
     }
-    Train player = Train("player",stationList.at(0),1.0);
+    Train player = Train("player",&stationList[0],0.5);
     cout<<endl;
-    int target = 0;
-    Station curStation = stationList.at(0);
+
+    //int targetIndex = 0;
+    //Station curStation = *player.getCurrent();
+
     char selection = ' ';
-    vector<Station> destinations;
+    
+    //vector<Station *> destinations;
+    
     //1 display all stations
     //2 show current station
     //3 show destinations of that current station with numbered selections
@@ -136,34 +131,61 @@ int main()
         cout<<"what do you select? Q,R, or number presented"<<endl;
         int counter = 1;
         //1 display stations
-        for(Station x : stationList)
+        for(Station& x : stationList)
         {
             //destinations.push_back(x);
             cout<<counter<<". "<<x.getName()<<", "<<endl;
             counter++;
         }
+	Station* currentStation = player.getCurrent();
 	//steps 2,3
-	cout<<"Current Station : "<<curStation.getName()<<endl;
-	curStation.displayDestinations();
-        cout<<"Selection: ";
-	cin >> selection;
-	//step 4
+	if(currentStation != nullptr)
+	{
+		//curStation = *player.getCurrent();
+		cout<<"Current Station : "<<currentStation->getName()<<endl;
+		currentStation->displayDestinations();
+
+	}
+	else
+	{
+		cout<<"no curr station set"<<endl;
+	}
 	
+	cout<<"Selection: ";
+	cin >> selection;
+
+	//step 4
 	if(isdigit(selection))
 	{
-		target = (selection - '0')-1;
-		//cout<<"target : "<<target<<endl;
-		if (target >= 0 && target < curStation.getDestinations().size())
+		int targetIndex = (selection - '0')-1;
+		if (targetIndex >= 0 && targetIndex < currentStation->getDestinations().size())
 		{
-			vector<Station> dests = curStation.getDestinations();
-			Station targetStation = dests.at(target);
-			player.setDest(&targetStation);
-			Station temp = player.getDest();
-			temp.display();
+			//debug display stuff
+			/*
+			cout<<"curr ";
+			player.getCurrent()->display();
+			cout<<endl;
+			cout<<"dest ";
+			player.getDest()->display();
+			cout<<endl;*/
+
+			//actual variable changes
+			//vector<Station*> dests = player.getCurrent()->getDestinations();
+			Station* dest = currentStation->getDestinations()[targetIndex];
+			player.setDest(dest);
+			player.travel(targetIndex);
+
+			currentStation = player.getCurrent();
+			cout<<"Curr :"<<currentStation->getName()<<endl;
+			cout<<"Dest :"<<player.getDest()->getName()<<endl;
+		}
+		else
+		{
+			cout<<"invalid selection"<<endl;
 		}
 	}
     }    
-    
+    cout<<endl<<"Game Exit"<<endl;
     return 0;
     
 }
