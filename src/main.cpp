@@ -110,7 +110,7 @@ int main()
     {
 	 stationList[i].displayDestinations();
     }
-    Train player = Train("player",&stationList[0],0.5);
+    Train player = Train("player",stationList[0],0.5);
     cout<<endl;
 
     //int targetIndex = 0;
