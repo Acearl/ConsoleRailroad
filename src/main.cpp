@@ -110,7 +110,7 @@ int main()
     {
 	 stationList[i].displayDestinations();
     }
-    Train player = Train("player",&stationList[0],0.5);
+    Train player = Train("player",stationList[0],0.5);
     cout<<endl;
 
     //int targetIndex = 0;
@@ -131,18 +131,19 @@ int main()
         cout<<"what do you select? Q,R, or number presented"<<endl;
         int counter = 1;
         //1 display stations
-        for(Station& x : stationList)
+        for(auto x : stationList)
         {
             //destinations.push_back(x);
             cout<<counter<<". "<<x.getName()<<", "<<endl;
             counter++;
         }
-	Station* currentStation = player.getCurrent();
+	Station *currentStation = player.getCurrent();
 	//steps 2,3
 	if(currentStation != nullptr)
 	{
 		//curStation = *player.getCurrent();
 		cout<<"Current Station : "<<currentStation->getName()<<endl;
+		//segmentation fault somehow
 		currentStation->displayDestinations();
 
 	}

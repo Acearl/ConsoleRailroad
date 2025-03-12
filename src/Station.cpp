@@ -41,7 +41,15 @@ class Station{
 	    {
 		cout<<endl;
 		Station temp;
-                cout<<name<<":";
+		cout<<name<<":"<<endl;
+		int counter = 1;
+		//cout<<destinations[counter]->name;	
+		//cout<<"target : "<<target<<endl;
+		for(auto x: destinations)
+		{
+			cout<<"\t"<<counter<<". "<<x->getName()<<", "<<x->distCalc(counter)<<endl;
+		}
+		/*
 	        for(int counter = 0; counter < destinations.size(); counter++)
        		{
 			if(destinations[counter] != nullptr)
@@ -50,7 +58,7 @@ class Station{
                			cout<<"\t"<<counter+1<<". "<<temp.getName()<<", "<<temp.distCalc(counter)<<endl;
 			}
 		}
-
+		*/
 	    }
     	           }
         int getX()
