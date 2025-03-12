@@ -69,9 +69,9 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
 			tempStationList.push_back(&ogStationList[k]);
 		}
 	}
-	cout<<"test"<<endl;
+	//cout<<"test"<<endl;
 	//vector<string> tempStationNames = stationNames;//for removing names
-        cout<<"Setting destinations for "<<ogStationList[x].getName()<<endl;
+        //cout<<"Setting destinations for "<<ogStationList[x].getName()<<endl;
         //tempStationList.erase(tempStationList.begin() + x);//remove station's own name
 	for (size_t i = 0; i < 2; i++)
         {
@@ -101,7 +101,7 @@ int main()
     vector<Station> stationList = GenerateStations(stationNames, gen);
 
     // Display the generated stations
-    for (auto& station : stationList) 
+    for (auto station : stationList)
     {
         station.display();
     }
@@ -110,7 +110,7 @@ int main()
     {
 	 stationList[i].displayDestinations();
     }
-    Train player = Train("player",stationList[0],0.5);
+    Train player = Train("player",&stationList[0],0.5);
     cout<<endl;
 
     //int targetIndex = 0;
@@ -134,7 +134,11 @@ int main()
         for(auto x : stationList)
         {
             //destinations.push_back(x);
-            cout<<counter<<". "<<x.getName()<<", "<<endl;
+            cout<<counter<<". "<<x.getName()<<", ";
+	    for(auto y: x.getDestinations())//only names and distances to points
+		{
+
+		}
             counter++;
         }
 	Station *currentStation = player.getCurrent();

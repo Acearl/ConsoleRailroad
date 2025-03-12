@@ -10,16 +10,16 @@
 
 class Train{
     private:
-        Station* current;
-        Station* dest;
+        Station *current;
+        Station *dest;
         double speed;
         std::string name;
         
     public:
     Train(){};
-    Train(std::string name, Station current, double speed)
-    : name(name), current(&current), speed(speed){};
-    Train(std::string name, Station* current, Station* dest, double speed)
+    Train(std::string name, Station *current, double speed)
+    : name(name), current(current), speed(speed){};
+    Train(std::string name, Station *current, Station *dest, double speed)
     : name(name), current(current), dest(dest), speed(speed){};
 
     void display()

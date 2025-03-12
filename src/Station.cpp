@@ -23,7 +23,7 @@ class Station{
         Station(){};
         Station(const string& name, const pair<int,int>& cords)
         : name(name), cords(cords), destinations() {};
-        Station(const string& name, const pair<int,int>& cords, const vector<string> dest)
+        Station(const string& name, const pair<int,int> cords, const vector<string> dest)
         : name(name), cords(cords), destinations2(dest){}
         Station(const string& name, const pair<int,int>& cords, const vector<Station *> dest)
         : name(name), cords(cords), destinations(dest){};
@@ -39,7 +39,6 @@ class Station{
 	    }
 	    else
 	    {
-		cout<<endl;
 		Station temp;
 		cout<<name<<":"<<endl;
 		int counter = 1;
@@ -47,7 +46,8 @@ class Station{
 		//cout<<"target : "<<target<<endl;
 		for(auto x: destinations)
 		{
-			cout<<"\t"<<counter<<". "<<x->getName()<<", "<<x->distCalc(counter)<<endl;
+			cout<<"\t"<<counter+1<<". "<<x->getName()<<", "<<x->distCalc(counter)<<endl;
+			counter++;
 		}
 		/*
 	        for(int counter = 0; counter < destinations.size(); counter++)
@@ -89,9 +89,15 @@ class Station{
         }
 	double distCalc(int target)
 	{
+		//Take in station destination from this instance of a station class.
+		//print the total distance calculation with euclidian geometry.
+		target--;//quick mod to be indexes of arrays.
 		cout<<"dist calc:  ";
-		cout<<"target :"<<target<<": destinations size = "<<destinations.size();
-		if(target>= 0 && target< destinations.size())
+		int size = 0;
+		for(auto x: destinations)
+		{size++;}
+		cout<<"target :"<<target+1<<": destinations size = "<<size;
+		if(target >= 0 && target < size)
 		{
 			//cout<<"REEEEEE"<<endl;
 			double dist;
@@ -105,7 +111,7 @@ class Station{
 		}
 		else
 		{
-		cout<<endl<<"dist calc error. target :"<<target<<" for station "<<name<<endl;
+			cout<<endl<<"dist calc error. target :"<<target<<" for station "<<name<<" to "<<destinations[target]->getName()<<endl;
 		return -1.0;
 		}
 				
