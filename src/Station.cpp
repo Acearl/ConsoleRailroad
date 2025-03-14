@@ -46,7 +46,7 @@ class Station{
 		//cout<<"target : "<<target<<endl;
 		for(auto x: destinations)
 		{
-			cout<<"\t"<<counter+1<<". "<<x->getName()<<", "<<x->distCalc(counter)<<endl;
+			cout<<"\t"<<counter<<". "<<x->getName()<<x->distCalc(counter)<<endl;
 			counter++;
 		}
 		/*
@@ -92,14 +92,17 @@ class Station{
 		//Take in station destination from this instance of a station class.
 		//print the total distance calculation with euclidian geometry.
 		target--;//quick mod to be indexes of arrays.
-		cout<<"dist calc:  ";
-		int size = 0;
-		for(auto x: destinations)
-		{size++;}
-		cout<<"target :"<<target+1<<": destinations size = "<<size;
-		if(target >= 0 && target < size)
+		cout<<" : Dist : ";
+		int x = 0;
+		for(auto y: destinations)
+		{
+			x++;
+		}
+		//cout<<"target :"<<target+1<<": destinations size = |"<<destinations.size();//<<"   X"<<x;
+		if(target >= 0 && target < destinations.size())
 		{
 			//cout<<"REEEEEE"<<endl;
+			cout<<"|";
 			double dist;
 			Station dest = *destinations[target];
 			

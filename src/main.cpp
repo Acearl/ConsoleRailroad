@@ -110,7 +110,7 @@ int main()
     {
 	 stationList[i].displayDestinations();
     }
-    Train player = Train("player",&stationList[0],0.5);
+    Train player = Train("player",&stationList[0],2.0);
     cout<<endl;
 
     //int targetIndex = 0;
@@ -163,21 +163,22 @@ int main()
 	if(isdigit(selection))
 	{
 		int targetIndex = (selection - '0')-1;
+		cout<<endl<<"line 166"<<endl;
+		Station* dest = currentStation->getDestinations()[targetIndex];
+		player.setDest(dest);
 		if (targetIndex >= 0 && targetIndex < currentStation->getDestinations().size())
 		{
 			//debug display stuff
-			/*
+			
 			cout<<"curr ";
 			player.getCurrent()->display();
-			cout<<endl;
 			cout<<"dest ";
 			player.getDest()->display();
-			cout<<endl;*/
-
+			cout<<endl;
+			cout<<"REEE";		
 			//actual variable changes
 			//vector<Station*> dests = player.getCurrent()->getDestinations();
-			Station* dest = currentStation->getDestinations()[targetIndex];
-			player.setDest(dest);
+			//player.setDest(dest);
 			player.travel(targetIndex);
 
 			currentStation = player.getCurrent();

@@ -53,7 +53,7 @@ class Train{
     }
     void travel(int target)
     {
-	 
+	cout<<"travel";
 	double dist = current->distCalc(target);
 	int rounded = round(dist);
 	for(int i = 0; i<= dist; ++i)
