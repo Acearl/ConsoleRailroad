@@ -162,23 +162,28 @@ int main()
 	//step 4
 	if(isdigit(selection))
 	{
-		int targetIndex = (selection - '0')-1;
+		int targetIndex = (selection - '0');
 		cout<<endl<<"line 166"<<endl;
 		Station* dest = currentStation->getDestinations()[targetIndex];
 		player.setDest(dest);
-		if (targetIndex >= 0 && targetIndex < currentStation->getDestinations().size())
+		if (targetIndex >= 1 && targetIndex <= currentStation->getDestinations().size())
 		{
 			//debug display stuff
-			
+			if(targetIndex == currentStation->getDestinations().size())
+			{
+				Station* dest = currentStation->getDestinations()[targetIndex-1];
+				player.setDest(dest);
+			}
 			cout<<"curr ";
 			player.getCurrent()->display();
 			cout<<"dest ";
 			player.getDest()->display();
 			cout<<endl;
-			cout<<"REEE";		
+			cout<<"REEE  ";		
 			//actual variable changes
 			//vector<Station*> dests = player.getCurrent()->getDestinations();
 			//player.setDest(dest);
+			cout<<"tar "<<targetIndex;
 			player.travel(targetIndex);
 
 			currentStation = player.getCurrent();
