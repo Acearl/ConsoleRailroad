@@ -8,10 +8,124 @@
 
 using namespace std;
 
-vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
-    //min must be "size" of array to do all stations.
+vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen, int sizeMin);
+void displayMap(int width, int height, vector<Station> stations);
+int main() 
+{
+    vector<string> stationNames{"Totonian", "Markarth", "Sevental", "Green Acres", "Lawnton", "Great Rock", "Tea Town"}; //{"A","B","C","D","E","F","G","H"};
+    random_device rd;
+    mt19937 gen(rd());
+    int size = 8;
+    
+    // Generate stations with random names and coordinates
+    vector<Station> stationList = GenerateStations(stationNames, gen, size);
+    // Display the generated stations
+    for (auto station : stationList)
+    {
+        station.display();
+    }
+    //cout<<"rip"<<endl;
+    for (int i = 0; i<stationList.size(); i++) 
+    {
+	 stationList[i].displayDestinations();
+    }
 
-    int numStations = min(8, static_cast<int>(stationNames.size())); 
+	displayMap(size,size,stationList);
+    Train player = Train("player",&stationList[0],2.0);
+    cout<<endl;
+
+    //int targetIndex = 0;
+    //Station curStation = *player.getCurrent();
+
+    char selection = ' ';
+    
+    //vector<Station *> destinations;
+    
+    //1 display all stations
+    //2 show current station
+    //3 show destinations of that current station with numbered selections
+    //4 select user input of that station to be the destination
+    //5 travel to said station
+    //6 reapeat until user quits
+    while (selection != 'q' && selection != 'Q')
+    {
+	    displayMap(size,size,stationList);
+        cout<<"what do you select? Q,R, or number presented"<<endl;
+        int counter = 1;
+        //1 display stations
+        for(auto x : stationList)
+        {
+            //destinations.push_back(x);
+            cout<<counter<<". "<<x.getName()<<", ";
+	    for(auto y: x.getDestinations())//only names and distances to points
+		{
+
+		}
+            counter++;
+        }
+	Station *currentStation = player.getCurrent();
+	//steps 2,3
+	if(currentStation != nullptr)
+	{
+		//curStation = *player.getCurrent();
+		cout<<"Current Station : "<<currentStation->getName()<<endl;
+		//segmentation fault somehow
+		currentStation->displayDestinations();
+
+	}
+	else
+	{
+		cout<<"no curr station set"<<endl;
+	}
+	
+	cout<<"Selection: ";
+	cin >> selection;
+
+	//step 4
+	if(isdigit(selection))
+	{
+		int targetIndex = (selection - '0');
+		cout<<endl<<"line 166"<<endl;
+		Station* dest = currentStation->getDestinations()[targetIndex];
+		player.setDest(dest);
+		if (targetIndex >= 1 && targetIndex <= currentStation->getDestinations().size())
+		{
+			//debug display stuff
+			if(targetIndex == currentStation->getDestinations().size())
+			{
+				Station* dest = currentStation->getDestinations()[targetIndex-1];
+				player.setDest(dest);
+			}
+			cout<<"curr ";
+			player.getCurrent()->display();
+			cout<<"dest ";
+			player.getDest()->display();
+			cout<<endl;
+			cout<<"REEE  ";		
+			//actual variable changes
+			//vector<Station*> dests = player.getCurrent()->getDestinations();
+			//player.setDest(dest);
+			cout<<"tar "<<targetIndex;
+			player.travel(targetIndex);
+
+			currentStation = player.getCurrent();
+			cout<<"Curr :"<<currentStation->getName()<<endl;
+			cout<<"Dest :"<<player.getDest()->getName()<<endl;
+		}
+		else
+		{
+			cout<<"invalid selection"<<endl;
+		}
+	}
+    }    
+    cout<<endl<<"Game Exit"<<endl;
+    return 0;
+}
+
+vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen, int sizeMin) {
+    //min must be "size" of array to do all stations.//not relevent anymore but keeping here in case I need it.
+
+    int numStations = min(sizeMin, static_cast<int>(stationNames.size())); 
     int gridLen = static_cast<int>(stationNames.size());
     vector<Station> ogStationList;
     uniform_int_distribution<> ogNameDistrib(0, stationNames.size()-1);
@@ -90,113 +204,87 @@ vector<Station> GenerateStations(vector<string> stationNames, mt19937& gen) {
     }
     return ogStationList;
 }
-
-int main() 
+void displayMap(int width, int height, vector<Station> stations)
 {
-    vector<string> stationNames{"Totonian", "Markarth", "Sevental", "Green Acres", "Lawnton", "Great Rock", "Tea Town"}; //{"A","B","C","D","E","F","G","H"};
-    random_device rd;
-    mt19937 gen(rd());
-    
-    // Generate stations with random names and coordinates
-    vector<Station> stationList = GenerateStations(stationNames, gen);
-
-    // Display the generated stations
-    for (auto station : stationList)
-    {
-        station.display();
-    }
-    //cout<<"rip"<<endl;
-    for (int i = 0; i<stationList.size(); i++) 
-    {
-	 stationList[i].displayDestinations();
-    }
-    Train player = Train("player",&stationList[0],2.0);
-    cout<<endl;
-
-    //int targetIndex = 0;
-    //Station curStation = *player.getCurrent();
-
-    char selection = ' ';
-    
-    //vector<Station *> destinations;
-    
-    //1 display all stations
-    //2 show current station
-    //3 show destinations of that current station with numbered selections
-    //4 select user input of that station to be the destination
-    //5 travel to said station
-    //6 reapeat until user quits
-    while (selection != 'q' && selection != 'Q')
-    {
-        cout<<"what do you select? Q,R, or number presented"<<endl;
-        int counter = 1;
-        //1 display stations
-        for(auto x : stationList)
-        {
-            //destinations.push_back(x);
-            cout<<counter<<". "<<x.getName()<<", ";
-	    for(auto y: x.getDestinations())//only names and distances to points
-		{
-
-		}
-            counter++;
-        }
-	Station *currentStation = player.getCurrent();
-	//steps 2,3
-	if(currentStation != nullptr)
+	//get x and y value to determine the size of the map
+	//build left to right by repeating a character util the x value is hit
+	//place char value of first letter of the station name followed by the number in the sequence of that letter.
+	//ex Broville and Boston. Broville = B1 next Boston = B2. Claifications may follow.
+	//add rest of empty char spaces with width -x -1
+	//ex
+	//***T1**
+	//*I1**B1
+	//*******
+	//B2*****
+	vector<string> map;
+	string mapLine;
+	vector<int> xlist;
+	vector<int> ylist;
+	for(auto z: stations)
 	{
-		//curStation = *player.getCurrent();
-		cout<<"Current Station : "<<currentStation->getName()<<endl;
-		//segmentation fault somehow
-		currentStation->displayDestinations();
-
+		xlist.push_back(z.getX());
+		ylist.push_back(z.getY());
 	}
-	else
-	{
-		cout<<"no curr station set"<<endl;
-	}
-	
-	cout<<"Selection: ";
-	cin >> selection;
 
-	//step 4
-	if(isdigit(selection))
+	cout<<"X :"<<xlist.size()<<" Y "<<ylist.size()<<endl;
+	//loop (*s for x times. step+2.) 
+	for(int a = ylist.size(); a < height; a--)
 	{
-		int targetIndex = (selection - '0');
-		cout<<endl<<"line 166"<<endl;
-		Station* dest = currentStation->getDestinations()[targetIndex];
-		player.setDest(dest);
-		if (targetIndex >= 1 && targetIndex <= currentStation->getDestinations().size())
+		cout<<"A "<<a<<endl;
+		//get topmost/top down current line of the grid 
+		int curX = xlist[a];
+		//find what stations are in that line
+		for(int b = 0; b < xlist[b]; b++)
 		{
-			//debug display stuff
-			if(targetIndex == currentStation->getDestinations().size())
-			{
-				Station* dest = currentStation->getDestinations()[targetIndex-1];
-				player.setDest(dest);
+			cout<<"\t"<<"B "<<b<<endl;
+			//get y cords and first letters of those stations
+			//ys resets and letters doesnt to maintain checks of duplicate numbers to add B2 and such
+			vector<int> ys;
+			vector<char> letters;
+			char letter;
+			for(int c = 0; c < xlist.size(); c++)
+			{				
+				cout<<"\t\t"<<"C "<<c<<endl;
+				if(c==xlist[c])
+				{
+					ys.push_back(xlist[c]);
+					cout<<xlist[c];
+					string name = stations[a].getName();
+					letter = name[0];
+					cout<<letter<<"letter";
+					letters.push_back(letter);
+					cout<<"X ";
+				}
 			}
-			cout<<"curr ";
-			player.getCurrent()->display();
-			cout<<"dest ";
-			player.getDest()->display();
-			cout<<endl;
-			cout<<"REEE  ";		
-			//actual variable changes
-			//vector<Station*> dests = player.getCurrent()->getDestinations();
-			//player.setDest(dest);
-			cout<<"tar "<<targetIndex;
-			player.travel(targetIndex);
-
-			currentStation = player.getCurrent();
-			cout<<"Curr :"<<currentStation->getName()<<endl;
-			cout<<"Dest :"<<player.getDest()->getName()<<endl;
+			for(auto y: ys)
+			{
+				cout<<y<<" ";
+			}
+			for(int d = 0; d < ylist.size(); d++)
+			{
+				cout<<"\t\t"<<"D "<<d<<endl;
+				cout<<ys.at(d);
+				if(!ys.at(d))
+				{
+					string temp = string(d,'*');
+					mapLine = mapLine + temp;
+					int num;
+					for(int e = 0; e < letters.size();e++)
+					{
+						cout<<"\t\t\t"<<"E "<<e<<" ";
+						if(letter == letters.at(e))
+						{
+							num++;
+						}
+					}
+					mapLine = mapLine+letter+(char)num;
+					d++;
+				}
+			}
+			//make string to be printed of that line. 
 		}
-		else
-		{
-			cout<<"invalid selection"<<endl;
-		}
+		cout<<"ML :"<<mapLine<<endl;
 	}
-    }    
-    cout<<endl<<"Game Exit"<<endl;
-    return 0;
-    
+
 }
+
